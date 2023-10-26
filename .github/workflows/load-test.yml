@@ -1,0 +1,34 @@
+name: Pipeline to run load tests
+
+on: push
+
+permissions:
+  contents: write
+
+jobs:
+  non_functional_test: 
+    name: Load test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup
+        uses: actions/checkout@v3
+
+      - name: Run load test
+        uses: grafana/k6-action@v0.3.0
+        with: 
+          filename: tests/test.js
+
+      - run: ls & mkdir reports & mv index.html reports
+      
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with: 
+          name: Relatorio do teste de carga
+          path: reports
+      
+      - name: Publish report
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: *
+          publish_dir: reports
