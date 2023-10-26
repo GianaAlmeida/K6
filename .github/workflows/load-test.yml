@@ -1,6 +1,10 @@
 name: Pipeline to run load tests
 
-on: push
+on:
+  push:
+    - branch: main
+  schedule:
+    - cron: '30 17 * * 5' # Every thursday at 17:30
 
 permissions:
   contents: write
@@ -30,5 +34,5 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: feat/pipeline
+          publish_branch: main
           publish_dir: reports
